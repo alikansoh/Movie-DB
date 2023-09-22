@@ -15,13 +15,13 @@ server.get("/", (req, res) => {
 })
 
 server.get("/test", (req, res) => {
-    res.status(200).send({status:200, message:"ok"})
+    res.status(200).send({status:res.statusCode, message:"ok"})
 
 })
 
 server.get("/time", (req, res) => {
     let today=new Date();
-    res.status(200).send({status:200 ,time:today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()})
+    res.status(200).send({status:res.statusCode ,time:today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()})
 })
 
 
@@ -29,30 +29,45 @@ server.get("/hello/:id?", (req, res) => {
         if (!req.params.id)
             req.params.id= " "
     res.status(200)
-    res.send({status:200, message: 'hello,' +req.params.id})
+    res.send({status:res.statusCode, message: 'hello,' +req.params.id})
 })
 
-server.get("/search/:s?", (req, res) => {
-    if (req.params.s)
-    res.send({status:200, message: 'ok,' +req.params.s})
+server.get("/search", (req, res) => {
+    let search=  req.query.s;
+    if (search) {
+        res.status(200).send( `status: ${res.statusCode}, message: 'ok', data: ${search} `);
+    } else {
+        res.status(500).send(` status: ${res.statusCode}, error: true, message: 'you have to provide a search`);
+    }
+})
+
+server.get('/movies/add', function(req, res){
+    let title = req.query.title
+    let year = req.query.year
+    let rating = req.query.rating || 4
+    if (!title || !year){
+        res.status(403).send(` status: ${res.statusCode}, error: true, message: 'you have to provide a title and a year'`);
+    }else if(year.length < 4 ){
+        res.status(403).send(` status: ${res.statusCode}, error: true, message: 'make sure you put 4 digits'`);
+    }
     else
-        res.status(500).send({status:500, error: true,message: 'you have to provide a search'})
-})
+    {
+        moviesData.push({title: title, year: year, rating: rating||4,id:moviesData+1})
+        res.status(200).send(`status:${res.statusCode}. movies has been added successfully`);
+    }
+});
 
-server.post("/movies/add", (req, res) => {
-
-})
 
 server.get("/movies/read", (req, res) => {
     let data=moviesData.map(e => e.title)
-    res.status(200).send({status:200, data:data})
+    res.status(200).send({status:res.statusCode, data:data})
 })
 
-server.put("/movies/edit", (req, res) => {
+server.get("/movies/edit", (req, res) => {
 
 })
 
-server.patch("/movies/delete", (req, res) => {
+server.get("/movies/delete", (req, res) => {
 
 })
 
@@ -83,18 +98,18 @@ server.get("/movies/read/:order?", (req, res) => {
 
 
 
-    res.send({status: 200, data: data_sorted == null ? "enter correct sort method('by_rating,by_year,by_title') ": data_sorted})
+    res.send({status: res.statusCode, data: data_sorted == null ? "enter correct sort method('by_rating,by_year,by_title') ": data_sorted})
 })
 server.get("/movies/read/id/:id?", (req, res) => {
 
 
     if (req.params.id > moviesData.length || req.params.id<0)
 
-       res.status(404).send({status:404, error:true, message:'the movie '+req.params.id +'  does not exist'})
+       res.status(404).send({status:res.statusCode, error:true, message:'the movie '+req.params.id +'  does not exist'})
 
     else {
-        let movie = moviesData[req.params.id].title
-        res.status(200).send({status: 200, data: movie})
+        let movie = moviesData[parseInt(req.params.id)-1].title
+        res.status(200).send({status: res.statusCode, data: movie})
 
     }
 })
