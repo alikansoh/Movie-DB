@@ -2,6 +2,12 @@
 const express = require('express');
 
 const server = express();
+const moviesData = [
+    { title: 'Jaws', year: 1975, rating: 8 },
+    { title: 'Avatar', year: 2009, rating: 7.8 },
+    { title: 'Brazil', year: 1985, rating: 8 },
+    { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
+]
 server.get("/", (req, res) => {
     res.send('ok')
 })
@@ -29,8 +35,22 @@ server.get("/search/:s?", (req, res) => {
         res.json({status:500, error: true,message: 'you have to provide a search'})
 })
 
+server.post("/movies/add", (req, res) => {
 
+})
 
+server.get("/movies/get", (req, res) => {
+    let data=moviesData.map(e => e.title)
+    res.json({status:200, data:data})
+})
+
+server.put("/movies/edit", (req, res) => {
+
+})
+
+server.patch("/movies/delete", (req, res) => {
+
+})
 
 
 server.listen(3000,()=>console.log("run server"))
