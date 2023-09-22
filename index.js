@@ -39,7 +39,7 @@ server.post("/movies/add", (req, res) => {
 
 })
 
-server.get("/movies/get", (req, res) => {
+server.get("/movies/read", (req, res) => {
     let data=moviesData.map(e => e.title)
     res.json({status:200, data:data})
 })
@@ -51,6 +51,34 @@ server.put("/movies/edit", (req, res) => {
 server.patch("/movies/delete", (req, res) => {
 
 })
+
+server.get("/movies/read/:order", (req, res) => {
+    let order_film = req.params.order
+    let data_sorted
+    if (req.params.order === 'by_title') {
+        data_sorted = moviesData.sort((a, b) => {
+            if (a.title < b.title)
+                return -1
+        })
+
+
+    } else if (req.params.order === 'by_rating') {
+        data_sorted = moviesData.sort((a, b) => {
+            if (a.rating > b.rating)
+                return -1
+        })
+    } else if (req.params.order === 'by_year') {
+        data_sorted = moviesData.sort((a, b) => {
+            if (a.year < b.year)
+                return -1
+        })
+    }
+    else
+        res.send('entre sorting order: by_title,  by_rating   by_year')
+
+    res.json({status: 200, data: data_sorted})
+})
+
 
 
 server.listen(3000,()=>console.log("run server"))
