@@ -67,7 +67,15 @@ server.get("/movies/edit", (req, res) => {
 
 })
 
-server.get("/movies/delete", (req, res) => {
+server.get("/movies/delete/:id", (req, res) => {
+ let id =req.params.id
+    if (id > moviesData.length || id<0)
+        res.status(404).send({status:res.statusCode, error:true, message:'the movie '+id +'  does not exist'})
+    else{
+        moviesData.splice(parseInt(id)-1,1)
+        res.status(200).send({status:res.statusCode, message:'the movie '+id +'  has been deleted',data:moviesData.map(e=>e.title)})
+
+    }
 
 })
 
