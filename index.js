@@ -64,7 +64,21 @@ server.get("/movies/read", (req, res) => {
 })
 
 server.get("/movies/edit", (req, res) => {
-
+    let editMoviesTitle = req.query.title
+    let editMoviesYear = req.query.year
+    let editMoviesRating = req.query.rating
+    let movieId = parseInt(req.params.id)
+    let movieToEdit = moviesData.find(movie => movie.id === movieId);
+    if (!movieToEdit){
+        res.status(404).send({status: 404, error: true, message: `The movie with ID ${movieId} does not exist`});
+    }if(editMoviesTitle){
+        movieToEdit.title = editMoviesTitle
+    }if(editMoviesYear){
+        movieToEdit.year = editMoviesYear
+    }if(editMoviesRating){
+        movieToEdit.rating = editMoviesRating
+    }
+    res.status(200).send({status: 200, error: false, message: 'Movie edited successfully', movies: moviesData});
 })
 
 server.get("/movies/delete/:id", (req, res) => {
