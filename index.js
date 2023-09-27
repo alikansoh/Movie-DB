@@ -1,4 +1,5 @@
-
+require('dotenv').config();
+const mongoUrl = process.env.MONGODB_URL;
 const express = require('express');
 const mongoose = require('mongoose');
 const Movie = require('./modules/MoviesModel.js');
@@ -326,7 +327,7 @@ server.delete('/user/delete/:id',authenticateUser, async(req, res) => {
      
 })
 
-mongoose.connect("mongodb+srv://alikanso:45452525Uh@restapi.qm8uhwy.mongodb.net/node-api?retryWrites=true&w=majority")
+mongoose.connect(mongoUrl)
 
 .then(()=>{
     console.log("connected to mongoDB")
